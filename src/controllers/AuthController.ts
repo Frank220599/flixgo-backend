@@ -7,7 +7,7 @@ import {LoginValidator, SingupValidator} from "../validators";
 
 
 @JsonController('/auth')
-class AuthController {
+export class AuthController {
 
     @Post("/signup")
     public async signup(@Body() newUser: SingupValidator, @Res() res: Response): Promise<any> {
@@ -58,4 +58,3 @@ class AuthController {
     }
 }
 
-export default AuthController

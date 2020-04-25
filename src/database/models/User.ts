@@ -1,5 +1,19 @@
-import {AllowNull, Column, DefaultScope, HasMany, Model, Table, Unique} from "sequelize-typescript";
-import Todo from "./Todo";
+import {
+    AllowNull,
+    Column,
+    DefaultScope,
+    HasMany,
+    Model,
+    Default,
+    Table,
+    Unique,
+    BelongsTo,
+    ForeignKey
+} from "sequelize-typescript";
+import Review from "./Review";
+import Comment from "./Comment";
+import Role from "./Role";
+import Subscription from "./Subscription";
 
 @DefaultScope(() => ({
     attributes: {
@@ -19,11 +33,38 @@ class User extends Model<User> {
 
     @AllowNull(false)
     @Column
+    public lastName: string;
+
+    @Default(0)
+    @AllowNull(false)
+    @Column
+    public status: number;
+
+    @AllowNull(false)
+    @Column
     password: string;
 
-    @HasMany(() => Todo)
-    todos: Todo[]
+    @ForeignKey(() => Role)
+    @AllowNull(false)
+    @Column
+    roleId: number;
 
+    @ForeignKey(() => Subscription)
+    @AllowNull(false)
+    @Column
+    subscriptionId: number;
+
+    @BelongsTo(() => Subscription)
+    subscription: Subscription;
+
+    @BelongsTo(() => Role)
+    role: Role;
+
+    @HasMany(() => Review)
+    reviews: Review[];
+
+    @HasMany(() => Comment)
+    comments: Comment[]
 }
 
 

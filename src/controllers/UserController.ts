@@ -1,15 +1,16 @@
-import {Delete, Get, JsonController, Param, Put, Res} from "routing-controllers";
-import {Response} from "express";
-import User from "../database/models/User";
-import Todo from "../database/models/Todo";
-
+import {Delete, Get, JsonController, Param, Put, Res, Authorized, Req} from "routing-controllers";
+import {Response, Request} from "express";
+import UserRepository from "../repositories/UserRepository";
 
 @JsonController('/users')
-class UserController {
+export class UserController {
+
+    private readonly repository = new UserRepository();
+
     @Get("/")
-    public async getUsers(@Res() res: Response): Promise<any> {
+    public async getUsers(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
-            const users = await User.findAll({attributes: {exclude: ['password']}});
+            const users = await this.repository.findAndCountAll(req);
             return await res.json({
                 users,
                 msg: "Users fetched successfully!"
@@ -24,10 +25,7 @@ class UserController {
     @Get('/:id')
     public async getUser(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
-            const user = await User.findByPk(id, {include: [Todo], attributes: {exclude: ['password']}});
-            if (!user) {
-                throw new Error('User not found!');
-            }
+            const user = await this.repository.findByPk(id, {attributes: {exclude: ['password']}});
             return await res.json({
                 user,
                 msg: "Users fetched successfully!"
@@ -39,14 +37,10 @@ class UserController {
         }
     }
 
-
     @Put('/:id')
     public async updateUser(@Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
-            const user = await User.findByPk(id);
-            if (!user) {
-                throw new Error('User not found!')
-            }
+            const user = await this.repository.findByPk(id);
             return await res.json({
                 user,
                 msg: 'User fetched successfully!'
@@ -58,13 +52,11 @@ class UserController {
         }
     }
 
+    @Authorized(['Admin', 'Moderator'])
     @Delete('/:id')
     public async deleteUser(@Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
-            const user = await User.findByPk(id);
-            if (!user) {
-                throw new Error('User not found!')
-            }
+            const user = await this.repository.findByPk(id);
             return await res.json({
                 user: id,
                 msg: 'User deleted successfully!'
@@ -77,4 +69,3 @@ class UserController {
     }
 }
 
-export default UserController

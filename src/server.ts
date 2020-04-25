@@ -1,12 +1,25 @@
+import User from "./database/models/User";
+
 require('dotenv').config();
-import {useExpressServer} from "routing-controllers";
+import {useExpressServer, Action} from "routing-controllers";
 import isAuth from "./middlewares/isAuth";
 import currentUserChecker from "./middlewares/currentUserChecker";
 import db from "./database";
 import app from "./app";
 
 const server = useExpressServer(app, {
-    authorizationChecker: async (action) => isAuth(action),
+    authorizationChecker: async (action: Action, roles: string[]) => {
+        const user: User = await isAuth(action);
+        if (user && !roles.length)
+            return true;
+        if (user && roles.find(role => user.role.name === role)) {
+            await action.response.json({
+                msg: 'You do not permission for this operation'
+            });
+            return true;
+        }
+        return false;
+    },
     currentUserChecker: (action) => currentUserChecker(action),
     cors: true,
     routePrefix: "/api/v1",

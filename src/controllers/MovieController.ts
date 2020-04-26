@@ -13,10 +13,10 @@ import {
     Res,
 } from "routing-controllers"
 
-import User from "../database/models/User";
+import User from "../database/entities/User";
 import MovieRepository from "../repositories/MovieRepository";
-import Review from "../database/models/Review";
-import Comment from "../database/models/Comment";
+import Review from "../database/entities/Review";
+import Comment from "../database/entities/Comment";
 
 
 @JsonController("/movies")
@@ -27,7 +27,7 @@ export class MovieController {
     @Get("/")
     public async getMovies(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
-            const data = await this.repository.findAndCountAll(req);
+            const data = await this.repository.findAndCount(req);
             return await res.json({
                 movies: data,
                 msg: "Movies fetched successfully!"
@@ -42,7 +42,7 @@ export class MovieController {
     @Get("/:id")
     public async getMovie(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
-            const movie = await this.repository.findByPk(id, {include: [Comment, Review]});
+            const movie = await this.repository.findById(id, {include: [Comment, Review]});
             return await res.json({
                 movie,
                 msg: "Movies fetched successfully!"

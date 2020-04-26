@@ -2,7 +2,7 @@ import {Body, JsonController, Post, Res} from "routing-controllers";
 import {Response} from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
-import User from "../database/models/User";
+import User from "../database/entities/User";
 import {LoginValidator, SingupValidator} from "../validators";
 
 

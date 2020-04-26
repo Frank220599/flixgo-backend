@@ -13,7 +13,7 @@ import {
     Res,
 } from "routing-controllers"
 
-import User from "../database/models/User";
+import User from "../database/entities/User";
 import CommentRepository from "../repositories/CommentRepository";
 
 
@@ -25,9 +25,9 @@ export class CommentController {
     @Get("/")
     public async getComments(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
-            const data = await this.repository.findAndCountAll(req);
+            const comments = await this.repository.findAndCount(req);
             return await res.json({
-                comments: data,
+                comments,
                 msg: "Comments fetched successfully!"
             })
         } catch (e) {
@@ -40,7 +40,7 @@ export class CommentController {
     @Get("/:id")
     public async getComment(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
-            const comment = await this.repository.findByPk(id, {include: [User]});
+            const comment = await this.repository.findById(id, {include: [User]});
             return await res.json({
                 comment,
                 msg: "Comments fetched successfully!"
@@ -52,13 +52,13 @@ export class CommentController {
         }
     }
 
-    @Authorized()
+    // @Authorized()
     @Post("/")
     public async createComment(@CurrentUser() user: User, @Body() newComment, @Res() res: Response): Promise<any> {
         try {
             const comment = await this.repository.create({
                 ...newComment,
-                userId: user.id
+                userId: 1
             });
             return await res.status(201).json({
                 comment,
@@ -74,7 +74,7 @@ export class CommentController {
     @Authorized()
     @Put('/:id')
     public async updateComment(@CurrentUser() user: User, @Param("id") id: number, @Body() newValues,
-                            @Req() req: Request, @Res() res: Response): Promise<any> {
+                               @Req() req: Request, @Res() res: Response): Promise<any> {
         try {
             const comment = await this.repository.update(newValues, {where: {id, userId: user.id}});
             return await res.json({

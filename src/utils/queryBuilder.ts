@@ -1,19 +1,22 @@
 const queryBuilder = (req) => {
-    const {limit, page, ...restQueryParams} = req.query;
-    // req._metadata = {
-    //     currentPage: +page,
-    //     pageCount: Math.ceil(count / limit),
-    //     totalCount: count
-    // };
+    const {limit, page, include, select, ...restQueryParams} = req.query;
+    let relations;
+    if (typeof include === "string") {
+        relations = new Array(include)
+    } else {
+        relations = include
+    }
     return {
-        limit: +limit || 50,
-        offset: +(limit * (page - 1)) || 0,
+        relations: relations || [],
+        take: +limit || 50,
+        skip: +(limit * (page - 1)) || 0,
         where: {
             ...restQueryParams
         },
-        order: [
-            ['id','DESC']
-        ]
+        order: {
+            id: 'DESC'
+        },
+        cache: true
     }
 };
 

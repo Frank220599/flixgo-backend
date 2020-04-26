@@ -1,13 +1,5 @@
-import {Sequelize} from "sequelize-typescript";
-// @ts-ignore
-import config from './config'
+import {createConnection} from "typeorm";
 
-const options = config[process.env.NODE_ENV];
+const db = createConnection();
 
-const sequelize = new Sequelize({
-    ...options,
-    models: [__dirname + '/models/*.ts'],
-});
-
-
-export default sequelize
+export default db

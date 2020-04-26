@@ -1,9 +1,9 @@
 import CrudRepository from "./base/CrudRepository";
-import Comment from "../database/models/Comment";
+import Comment from "../database/entities/Comment";
 
 class CommentRepository extends CrudRepository<Comment> {
     constructor() {
-        super('Comment');
+        super(Comment);
     }
 }
 

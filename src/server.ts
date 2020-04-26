@@ -1,4 +1,4 @@
-import User from "./database/models/User";
+import User from "./database/entities/User";
 
 require('dotenv').config();
 import {useExpressServer, Action} from "routing-controllers";
@@ -27,7 +27,7 @@ const server = useExpressServer(app, {
     middlewares: []
 });
 
-db.sync({force: false}).then(r => {
+db.then(r => {
     const port = process.env.PORT || 8080;
     server.listen(port, () => {
         if (process.env.NODE_ENV !== 'test')

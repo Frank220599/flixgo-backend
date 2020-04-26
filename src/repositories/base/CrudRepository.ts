@@ -1,59 +1,57 @@
 import {Request} from "express";
 import IRead from "../interfaces/IRead";
 import IWrite from "../interfaces/IWrite";
-import db from "../../database";
 import {NotFoundError} from "routing-controllers";
-import {FindOptions} from "sequelize";
+import {getRepository} from "typeorm";
 import queryBuilder from "../../utils/queryBuilder";
 
 abstract class CrudRepository<T> implements IWrite<T>, IRead<T> {
 
-    protected readonly model;
-    private readonly modelName: string;
+    protected readonly entity;
+    protected readonly entityName: string;
 
-    constructor(modelName) {
-        this.model = db.model(modelName);
-        this.modelName = modelName;
+    protected constructor(entity) {
+        this.entity = getRepository(entity);
+        this.entityName = `${entity.name}`;
     }
 
     public async create(values): Promise<T> {
-        return this.model.create(values)
+        return this.entity.insert(values)
     }
 
-    public async findAndCountAll(req: Request): Promise<any> {
-        const {rows, count} = await this.model.findAndCountAll(queryBuilder(req));
+    public async findAndCount(req: Request): Promise<any> {
+        const result = await this.entity.findAndCount(queryBuilder(req));
         const _metadata = {
-            currentPage: +req.query.page,
-            totalCount: count,
-            pageCount: Math.ceil(count / req.query.limit),
+            currentPage: +req.query.page || 1,
+            totalCount: result[1],
+            pageCount: Math.ceil(result[1] / req.query.limit) || 1,
         };
-        return {data: rows, _metadata}
+        return {data: result[0], _metadata}
     }
 
-    public async findOne(options: FindOptions): Promise<T> {
-        const result = await this.model.findOne(options);
-        if (!result) {
-            throw new NotFoundError(`${this.modelName} not found!`)
+    public async find(options): Promise<T> {
+        const result = await this.entity.find(options);
+        if (!result[0]) {
+            throw new NotFoundError(`${this.entityName} not found!`)
         }
-        return result
+        return result[0]
     }
 
-    public async findByPk(id: number, options?: FindOptions): Promise<T> {
-        return this.findOne({where: {id}, ...options})
+    public async findById(id: number, options?): Promise<T> {
+        return this.find({where: {id}, ...options})
     }
 
-    public async update(newValues, options: FindOptions): Promise<T> {
-        const result = await this.findOne(options);
+    public async update(newValues, options): Promise<T> {
+        const result = await this.find(options);
         Object.keys(newValues).map(key => {
             result[key] = newValues[key]
         });
-        //@ts-ignore
-        await result.save();
+        await this.entity.save(result);
         return result
     }
 
-    public async delete(options: FindOptions): Promise<T> {
-        const result = await this.findOne(options);
+    public async delete(options): Promise<T> {
+        const result = await this.find(options);
         //@ts-ignore
         return result.destroy();
     }

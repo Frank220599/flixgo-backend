@@ -1,0 +1,30 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "22051999",
+  "database": "flixgo",
+  "synchronize": true,
+  "logging": false,
+  "seeds": [
+    "src/database/seeds/**/*.ts"
+  ],
+  "factories": [
+    "src/database/factories/**/*.ts"
+  ],
+  "entities": [
+    "src/database/entities/**/*.ts"
+  ],
+  "migrations": [
+    "src/database/migrations/**/*.ts"
+  ],
+  "subscribers": [
+    "src/database/subscriber/**/*.ts"
+  ],
+  "cli": {
+    "entitiesDir": "src/database/entities",
+    "migrationsDir": "src/database/migrations",
+    "subscribersDir": "src/database/subscribers"
+  }
+}

@@ -10,7 +10,7 @@ export class UserController {
     @Get("/")
     public async getUsers(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
-            const users = await this.repository.findAndCountAll(req);
+            const users = await this.repository.findAndCount(req);
             return await res.json({
                 users,
                 msg: "Users fetched successfully!"
@@ -25,7 +25,7 @@ export class UserController {
     @Get('/:id')
     public async getUser(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
-            const user = await this.repository.findByPk(id, {attributes: {exclude: ['password']}});
+            const user = await this.repository.findById(id, {attributes: {exclude: ['password']}});
             return await res.json({
                 user,
                 msg: "Users fetched successfully!"
@@ -40,7 +40,7 @@ export class UserController {
     @Put('/:id')
     public async updateUser(@Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
-            const user = await this.repository.findByPk(id);
+            const user = await this.repository.findById(id);
             return await res.json({
                 user,
                 msg: 'User fetched successfully!'
@@ -56,7 +56,7 @@ export class UserController {
     @Delete('/:id')
     public async deleteUser(@Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
-            const user = await this.repository.findByPk(id);
+            const user = await this.repository.findById(id);
             return await res.json({
                 user: id,
                 msg: 'User deleted successfully!'

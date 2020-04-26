@@ -13,7 +13,7 @@ import {
     Res,
 } from "routing-controllers"
 
-import User from "../database/models/User";
+import User from "../database/entities/User";
 import ReviewRepository from "../repositories/ReviewRepository";
 
 
@@ -25,7 +25,7 @@ export class ReviewController {
     @Get("/")
     public async getReviews(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
-            const data = await this.repository.findAndCountAll(req);
+            const data = await this.repository.findAndCount(req);
             return await res.json({
                 roles: data,
                 msg: "Reviews fetched successfully!"
@@ -40,7 +40,7 @@ export class ReviewController {
     @Get("/:id")
     public async getReview(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
-            const role = await this.repository.findByPk(id, {include: [User]});
+            const role = await this.repository.findById(id, {include: [User]});
             return await res.json({
                 role,
                 msg: "Reviews fetched successfully!"

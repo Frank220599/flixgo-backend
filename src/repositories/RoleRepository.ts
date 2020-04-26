@@ -1,5 +1,5 @@
 import CrudRepository from "./base/CrudRepository";
-import Role from "../database/models/Role";
+import Role from "../database/entities/Role";
 
 class RoleRepository extends CrudRepository<Role> {
     constructor() {

@@ -3,7 +3,7 @@ import {IsEmail, MinLength} from "class-validator";
 export class TodoValidator {
     @MinLength(6)
     title?: String;
-''
+
     completed?: boolean
 }
 

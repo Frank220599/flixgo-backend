@@ -1,9 +1,9 @@
 import {Request} from "express";
-import IRead from "../interfaces/IRead";
-import IWrite from "../interfaces/IWrite";
+import IRead from "./interfaces/IRead";
+import IWrite from "./interfaces/IWrite";
 import {NotFoundError} from "routing-controllers";
 import {getRepository} from "typeorm";
-import queryBuilder from "../../utils/queryBuilder";
+import queryBuilder from "../utils/queryBuilder";
 
 abstract class CrudRepository<T> implements IWrite<T>, IRead<T> {
 
@@ -19,8 +19,8 @@ abstract class CrudRepository<T> implements IWrite<T>, IRead<T> {
         return this.entity.insert(values)
     }
 
-    public async findAndCount(req: Request): Promise<any> {
-        const result = await this.entity.findAndCount(queryBuilder(req));
+    public async findAndCount(req: Request, options?): Promise<any> {
+        const result = await this.entity.findAndCount({...queryBuilder(req), options});
         const _metadata = {
             currentPage: +req.query.page || 1,
             totalCount: result[1],
@@ -29,7 +29,7 @@ abstract class CrudRepository<T> implements IWrite<T>, IRead<T> {
         return {data: result[0], _metadata}
     }
 
-    public async find(options): Promise<T> {
+    public async find(options?): Promise<T> {
         const result = await this.entity.find(options);
         if (!result[0]) {
             throw new NotFoundError(`${this.entityName} not found!`)

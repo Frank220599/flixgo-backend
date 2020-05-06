@@ -5,7 +5,7 @@ interface IRead<T> {
 
     findById(id: number): Promise<T>;
 
-    findAndCount(req: Request): Promise<T[]>
+    findAndCount(req: Request, options): Promise<T[]>
 }
 
 export default IRead

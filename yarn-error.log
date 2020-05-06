@@ -113,9 +113,9 @@ Lockfile:
     dependencies:
       "@babel/highlight" "^7.8.3"
   
-  "@babel/core@^7.1.0", "@babel/core@^7.7.5":
+  "@babel/base@^7.1.0", "@babel/base@^7.7.5":
     version "7.9.0"
-    resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.9.0.tgz#ac977b538b77e132ff706f3b8a4dbad09c03c56e"
+    resolved "https://registry.yarnpkg.com/@babel/base/-/base-7.9.0.tgz#ac977b538b77e132ff706f3b8a4dbad09c03c56e"
     integrity sha512-kWc7L0fw1xwvI0zi8OKVBuxRVefwGOrKSQMvrQ3dW+bIIavBY3/NpXmpjMy7bQnLgwgzWQZ8TlM57YHpHNHz4w==
     dependencies:
       "@babel/code-frame" "^7.8.3"
@@ -349,9 +349,9 @@ Lockfile:
       jest-util "^25.1.0"
       slash "^3.0.0"
   
-  "@jest/core@^25.1.0":
+  "@jest/base@^25.1.0":
     version "25.1.0"
-    resolved "https://registry.yarnpkg.com/@jest/core/-/core-25.1.0.tgz#3d4634fc3348bb2d7532915d67781cdac0869e47"
+    resolved "https://registry.yarnpkg.com/@jest/base/-/base-25.1.0.tgz#3d4634fc3348bb2d7532915d67781cdac0869e47"
     integrity sha512-iz05+NmwCmZRzMXvMo6KFipW7nzhbpEawrKrkkdJzgytavPse0biEnCNr2wRlyCsp3SmKaEY+SGv7YWYQnIdig==
     dependencies:
       "@jest/console" "^25.1.0"
@@ -471,7 +471,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-25.1.0.tgz#221f354f512b4628d88ce776d5b9e601028ea9da"
     integrity sha512-4ktrQ2TPREVeM+KxB4zskAT84SnmG1vaz4S+51aTefyqn3zocZUnliLLm5Fsl85I3p/kFPN4CRp1RElIfXGegQ==
     dependencies:
-      "@babel/core" "^7.1.0"
+      "@babel/base" "^7.1.0"
       "@jest/types" "^25.1.0"
       babel-plugin-istanbul "^6.0.0"
       chalk "^3.0.0"
@@ -580,9 +580,9 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/cookiejar/-/cookiejar-2.1.1.tgz#90b68446364baf9efd8e8349bb36bd3852b75b80"
     integrity sha512-aRnpPa7ysx3aNW60hTiCtLHlQaIFsXFCgQlpakNgDNVFzbtusSY8PwjAQgRWfSk0ekNoBjO51eQRB6upA9uuyw==
   
-  "@types/express-serve-static-core@*":
+  "@types/express-serve-static-base@*":
     version "4.17.2"
-    resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.2.tgz#f6f41fa35d42e79dbf6610eccbb2637e6008a0cf"
+    resolved "https://registry.yarnpkg.com/@types/express-serve-static-base/-/express-serve-static-base-4.17.2.tgz#f6f41fa35d42e79dbf6610eccbb2637e6008a0cf"
     integrity sha512-El9yMpctM6tORDAiBwZVLMcxoTMcqqRO9dVyYcn7ycLWbvR8klrDn8CAOwRfZujZtWD7yS/mshTdz43jMOejbg==
     dependencies:
       "@types/node" "*"
@@ -594,7 +594,7 @@ Lockfile:
     integrity sha512-I8cGRJj3pyOLs/HndoP+25vOqhqWkAZsWMEmq1qXy/b/M3ppufecUwaK2/TVDVxcV61/iSdhykUjQQ2DLSrTdg==
     dependencies:
       "@types/body-parser" "*"
-      "@types/express-serve-static-core" "*"
+      "@types/express-serve-static-base" "*"
       "@types/serve-static" "*"
   
   "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
@@ -679,7 +679,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.3.tgz#eb7e1c41c4468272557e897e9171ded5e2ded9d1"
     integrity sha512-oprSwp094zOglVrXdlo/4bAHtKTAxX6VT8FOZlBKrmyLbNvE1zxZyJ6yikMVtHIvwP45+ZQGJn+FdXGKTozq0g==
     dependencies:
-      "@types/express-serve-static-core" "*"
+      "@types/express-serve-static-base" "*"
       "@types/mime" "*"
   
   "@types/stack-utils@^1.0.1":
@@ -1857,9 +1857,9 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
     integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
   
-  core-util-is@1.0.2, core-util-is@~1.0.0:
+  base-util-is@1.0.2, base-util-is@~1.0.0:
     version "1.0.2"
-    resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
+    resolved "https://registry.yarnpkg.com/base-util-is/-/base-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
     integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
   
   cors@2.8.5:
@@ -3531,7 +3531,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/istanbul-lib-instrument/-/istanbul-lib-instrument-4.0.1.tgz#61f13ac2c96cfefb076fe7131156cc05907874e6"
     integrity sha512-imIchxnodll7pvQBYOqUu88EufLCU56LMeFPZZM/fJZ1irYcYdqroaV+ACK1Ila8ls09iEYArp+nqyC6lW1Vfg==
     dependencies:
-      "@babel/core" "^7.7.5"
+      "@babel/base" "^7.7.5"
       "@babel/parser" "^7.7.5"
       "@babel/template" "^7.7.4"
       "@babel/traverse" "^7.7.4"
@@ -3579,7 +3579,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-25.1.0.tgz#75f0b09cf6c4f39360906bf78d580be1048e4372"
     integrity sha512-p+aOfczzzKdo3AsLJlhs8J5EW6ffVidfSZZxXedJ0mHPBOln1DccqFmGCoO8JWd4xRycfmwy1eoQkMsF8oekPg==
     dependencies:
-      "@jest/core" "^25.1.0"
+      "@jest/base" "^25.1.0"
       "@jest/test-result" "^25.1.0"
       "@jest/types" "^25.1.0"
       chalk "^3.0.0"
@@ -3598,7 +3598,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/jest-config/-/jest-config-25.1.0.tgz#d114e4778c045d3ef239452213b7ad3ec1cbea90"
     integrity sha512-tLmsg4SZ5H7tuhBC5bOja0HEblM0coS3Wy5LTCb2C8ZV6eWLewHyK+3qSq9Bi29zmWQ7ojdCd3pxpx4l4d2uGw==
     dependencies:
-      "@babel/core" "^7.1.0"
+      "@babel/base" "^7.1.0"
       "@jest/test-sequencer" "^25.1.0"
       "@jest/types" "^25.1.0"
       babel-jest "^25.1.0"
@@ -3909,7 +3909,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/jest/-/jest-25.1.0.tgz#b85ef1ddba2fdb00d295deebbd13567106d35be9"
     integrity sha512-FV6jEruneBhokkt9MQk0WUFoNTwnF76CLXtwNMfsc0um0TlB/LG2yxUd0KqaFjEJ9laQmVWQWS0sG/t2GsuI0w==
     dependencies:
-      "@jest/core" "^25.1.0"
+      "@jest/base" "^25.1.0"
       import-local "^3.0.2"
       jest-cli "^25.1.0"
   
@@ -5319,7 +5319,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.7.tgz#1eca1cf711aef814c04f62252a36a62f6cb23b57"
     integrity sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==
     dependencies:
-      core-util-is "~1.0.0"
+      base-util-is "~1.0.0"
       inherits "~2.0.3"
       isarray "~1.0.0"
       process-nextick-args "~2.0.0"
@@ -5332,7 +5332,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.1.13.tgz#f6eef764f514c89e2b9e23146a75ba106756d23e"
     integrity sha1-9u73ZPUUyJ4rniMUanW6EGdW0j4=
     dependencies:
-      core-util-is "~1.0.0"
+      base-util-is "~1.0.0"
       inherits "~2.0.1"
       isarray "0.0.1"
       string_decoder "~0.10.x"
@@ -5342,7 +5342,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.1.14.tgz#7cf4c54ef648e3813084c636dd2079e166c081d9"
     integrity sha1-fPTFTvZI44EwhMY23SB54WbAgdk=
     dependencies:
-      core-util-is "~1.0.0"
+      base-util-is "~1.0.0"
       inherits "~2.0.1"
       isarray "0.0.1"
       string_decoder "~0.10.x"
@@ -5425,9 +5425,9 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
     integrity sha1-jcrkcOHIirwtYA//Sndihtp15jc=
   
-  request-promise-core@1.1.3:
+  request-promise-base@1.1.3:
     version "1.1.3"
-    resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.3.tgz#e9a3c081b51380dfea677336061fea879a829ee9"
+    resolved "https://registry.yarnpkg.com/request-promise-base/-/request-promise-base-1.1.3.tgz#e9a3c081b51380dfea677336061fea879a829ee9"
     integrity sha512-QIs2+ArIGQVp5ZYbWD5ZLCY29D5CfWizP8eWnm8FoGD1TX61veauETVQbrV60662V0oFBkrDOuaBI8XgtuyYAQ==
     dependencies:
       lodash "^4.17.15"
@@ -5437,7 +5437,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/request-promise-native/-/request-promise-native-1.0.8.tgz#a455b960b826e44e2bf8999af64dff2bfe58cb36"
     integrity sha512-dapwLGqkHtwL5AEbfenuzjTYg35Jd6KPytsC2/TLkVMz8rm+tNt72MGUWT1RP/aYawMpN6HqbNGBQaRcBtjQMQ==
     dependencies:
-      request-promise-core "1.1.3"
+      request-promise-base "1.1.3"
       stealthy-require "^1.1.1"
       tough-cookie "^2.3.3"
   
@@ -6610,7 +6610,7 @@ Lockfile:
     integrity sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=
     dependencies:
       assert-plus "^1.0.0"
-      core-util-is "1.0.2"
+      base-util-is "1.0.2"
       extsprintf "^1.2.0"
   
   vm-browserify@^1.0.1:

@@ -4,6 +4,6 @@ import Movie from "../entities/Movie";
 
 export default class CreateMovie implements Seeder {
     public async run(factory: Factory, connection: Connection): Promise<any> {
-        await factory(Movie)().createMany(10)
+        await factory(Movie)().createMany(100)
     }
 }

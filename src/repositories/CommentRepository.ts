@@ -1,4 +1,4 @@
-import CrudRepository from "./base/CrudRepository";
+import CrudRepository from "../base/CrudRepository";
 import Comment from "../database/entities/Comment";
 
 class CommentRepository extends CrudRepository<Comment> {

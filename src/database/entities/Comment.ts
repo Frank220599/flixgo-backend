@@ -15,6 +15,9 @@ class Comment extends BaseEntity {
     @Column({default: 0})
     public dislike: number;
 
+    @Column()
+    public movieId: number;
+
     @ManyToOne(type => Comment, comment => comment.children)
     public parent: Comment;
 

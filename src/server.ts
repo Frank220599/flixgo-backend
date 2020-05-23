@@ -13,18 +13,28 @@ const server = useExpressServer(app, {
         if (user && !roles.length)
             return true;
         if (user && roles.find(role => user.role.name === role)) {
-            await action.response.json({
-                msg: 'You do not permission for this operation'
-            });
             return true;
         }
+        await action.response.json({
+            msg: 'You do not have permission for this operation'
+        });
         return false;
     },
     currentUserChecker: (action) => currentUserChecker(action),
     cors: true,
     routePrefix: "/api/v1",
     controllers: [__dirname + '/controllers/*.ts'],
-    middlewares: []
+    validation: {
+        skipNullProperties: false,
+        skipUndefinedProperties: false,
+        forbidUnknownValues: true,
+        whitelist: true,
+        validationError: {
+            value: false,
+            target: false
+        }
+    }
+
 });
 
 db.then(r => {

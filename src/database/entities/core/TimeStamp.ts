@@ -1,4 +1,4 @@
-import {CreateDateColumn, UpdateDateColumn, VersionColumn} from "typeorm";
+import {CreateDateColumn, UpdateDateColumn, VersionColumn, DeleteDateColumn} from "typeorm";
 
 export class TimeStamp {
 
@@ -7,6 +7,9 @@ export class TimeStamp {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 
     @VersionColumn()
     version: number;

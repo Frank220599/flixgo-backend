@@ -1,65 +1,75 @@
-import {Between, LessThan, MoreThanOrEqual, LessThanOrEqual, MoreThan, Not, Equal} from "typeorm";
+import {Between, LessThan, MoreThanOrEqual, LessThanOrEqual, MoreThan, Not, Equal, Like} from "typeorm";
 
-const queryBuilder = (req) => {
+const queryBuilder = (req: any, paginate?: boolean) => {
         console.log('query:', req.query);
         const {limit, page, include, sort, filter} = req.query;
-        let relations = [];
-        if (include) {
-            relations = include.split(',')
-        }
-        let sortObj;
+        let sortOptions, paginateOptions, filterOption, relations = [];
         if (sort) {
             const res = sort.split('-');
             if (res.length > 1) {
-                sortObj = {
+                sortOptions = {
                     [res[1]]: 'DESC'
                 };
             } else {
-                sortObj = {
+                sortOptions = {
                     [res[0]]: 'ASC'
                 };
             }
         }
+        if (paginate) {
+            paginateOptions = {
+                take: +limit || 50,
+                skip: +(limit * (page - 1)) || 0,
+                order: sortOptions,
+            }
+        }
+        if (include) {
+            relations = include.split(',')
+        }
 
-        let filterObj;
         if (filter) {
             for (let [key, value] of Object.entries(filter)) {
                 if (typeof filter[key] === "string") {
-                    filterObj = {
-                        ...filterObj,
+                    filterOption = {
+                        ...filterOption,
                         [key]: Equal(value)
                     }
                 } else if (typeof filter[key] === "object") {
                     for (let [childKey, childValue] of Object.entries(filter[key])) {
                         if (childKey === 'between') {
-                            filterObj = {
-                                ...filterObj,
+                            filterOption = {
+                                ...filterOption,
                                 [key]: Between(childValue[0], childValue[1])
                             }
                         } else if (childKey === 'moreThan') {
-                            filterObj = {
-                                ...filterObj,
+                            filterOption = {
+                                ...filterOption,
                                 [key]: MoreThan(childValue)
                             }
                         } else if (childKey === 'lessThan') {
-                            filterObj = {
-                                ...filterObj,
+                            filterOption = {
+                                ...filterOption,
                                 [key]: LessThan(childValue)
                             }
                         } else if (childKey === 'moreThanOrEqual') {
-                            filterObj = {
-                                ...filterObj,
+                            filterOption = {
+                                ...filterOption,
                                 [key]: MoreThanOrEqual(childValue)
                             }
                         } else if (childKey === 'lessThan') {
-                            filterObj = {
-                                ...filterObj,
+                            filterOption = {
+                                ...filterOption,
                                 [key]: LessThanOrEqual(childValue)
                             }
                         } else if (childKey === 'not') {
-                            filterObj = {
-                                ...filterObj,
+                            filterOption = {
+                                ...filterOption,
                                 [key]: Not(childValue)
+                            }
+                        } else if (childKey === 'like') {
+                            filterOption = {
+                                ...filterOption,
+                                [key]: Like(`%${childValue}%`)
                             }
                         }
                     }
@@ -68,10 +78,8 @@ const queryBuilder = (req) => {
         }
         return {
             relations,
-            take: +limit || 50,
-            skip: +(limit * (page - 1)) || 0,
-            where: filterObj,
-            order: sortObj,
+            ...paginateOptions,
+            where: filterOption,
             cache: 60000
         }
     }

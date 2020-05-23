@@ -3,13 +3,16 @@
     <words>
       <w>bcrypt</w>
       <w>farrux</w>
+      <w>flix</w>
       <w>flixgo</w>
       <w>middlewares</w>
+      <w>nodemailer</w>
       <w>sequelize</w>
       <w>signin</w>
       <w>signup</w>
       <w>slugify</w>
       <w>todos</w>
+      <w>uniqid</w>
       <w>zokirov</w>
     </words>
   </dictionary>

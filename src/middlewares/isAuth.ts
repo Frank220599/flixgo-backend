@@ -1,28 +1,29 @@
+import {Request} from "express"
 import jwt from "jsonwebtoken";
+import {UnauthorizedError,} from "routing-controllers"
+import {getCustomRepository} from "typeorm"
+import UserRepository from "../repositories/UserRepository";
 import User from "../database/entities/User";
 
+interface IRequest extends Request {
+    user: User
+}
 
-const isAuth = async ({request, response}) => {
+const isAuth = async ({request}: { request: IRequest}) => {
     try {
+        const repository = getCustomRepository(UserRepository);
         const authHeader = await request.get('Authorization');
         if (!authHeader) {
-            response.statusCode = 401;
-            throw new Error('Not authenticated!');
+            throw new UnauthorizedError();
         }
         const token = authHeader.split(' ')[1];
-        if (token === "1") {
-            return request.user = await User.findByPk(2);
-        }
         let decodedToken = await jwt.verify(token, 'secret') as { userId: number };
         if (!decodedToken) {
-            response.statusCode = 401;
-            throw new Error('Not authenticated!');
+            throw new UnauthorizedError();
         }
-        return request.user = await User.findByPk(decodedToken.userId);
+        return request.user = await repository.findById(decodedToken.userId);
     } catch (e) {
-        await response.json({
-            error: e.message
-        });
+        throw new UnauthorizedError(e)
     }
 };
 

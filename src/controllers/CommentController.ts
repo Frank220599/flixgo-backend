@@ -38,12 +38,12 @@ export class CommentController {
     }
 
     @Get("/:id")
-    public async getComment(@Param('id') id: number, @Res() res: Response): Promise<any> {
+    public async getComment(@Param('id') id: number, @Req() req: Request, @Res() res: Response): Promise<any> {
         try {
-            const comment = await this.repository.findById(id, {include: [User]});
+            const comment = await this.repository.findOne(req, {where: {id}});
             return await res.json({
                 comment,
-                msg: "Comments fetched successfully!"
+                msg: "Comment fetched successfully!"
             })
         } catch (e) {
             return res.json({

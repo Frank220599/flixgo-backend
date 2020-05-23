@@ -9,7 +9,7 @@ import {BaseEntity} from "./core/BaseEntity";
 @Entity()
 class User extends BaseEntity {
 
-    @Column()
+    @Column({unique: true})
     public email: string;
 
     @Column()
@@ -24,10 +24,10 @@ class User extends BaseEntity {
     @Column({select: false})
     password: string;
 
-    @ManyToOne(type => Subscription, subscription => subscription.users)
+    @ManyToOne(type => Subscription, subscription => subscription.users, {eager: true})
     public subscription: Subscription;
 
-    @ManyToOne(type => Role, role => role.users)
+    @ManyToOne(type => Role, role => role.users, {eager: true})
     public role: Role;
 
     @OneToMany(type => Review, review => review.user)

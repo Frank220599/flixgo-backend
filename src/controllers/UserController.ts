@@ -1,14 +1,8 @@
 import {Response, Request} from "express";
-import {Delete, Get, JsonController, Param, Put, Res, Authorized, Req, Body} from "routing-controllers";
+import {Delete, Get, JsonController, Param, Put, Res, Authorized, Req, Body, NotFoundError} from "routing-controllers";
 import {getCustomRepository} from "typeorm"
 import UserRepository from "../repositories/UserRepository";
-
-export interface IRequest extends Request {
-    query: {
-        page: number,
-        limit: number
-    }
-}
+import {UserDTO} from "../dto";
 
 
 @JsonController('/users')
@@ -17,37 +11,39 @@ export class UserController {
     private readonly repository = getCustomRepository(UserRepository);
 
     @Get("/")
-    public async getUsers(@Res() res: Response, @Req() req: IRequest): Promise<any> {
+    public async getUsers(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
             const users = await this.repository.findAndCount(req);
             return await res.json(users)
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
+
 
     @Get('/:id')
     public async getUser(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
             const user = await this.repository.findById(id);
-            return await res.json(user);
-        } catch (e) {
-            return res.status(e.httpCode || 200).json(e)
+            if (!user) {
+                res.statusCode = 404;
+                throw new NotFoundError('User not found!')
+            }
+            console.log(user)
+            return await res.json({data: user});
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Authorized()
     @Put('/:id')
-    public async updateUser(@Body() values: object, @Param("id") id: number, @Res() res: Response): Promise<any> {
+    public async updateUser(@Body() values: UserDTO, @Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
             const user = await this.repository.update(id, values);
-            return await res.json(user)
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+            return await res.json({data: user})
+        } catch (error) {
+            return res.json({error})
         }
     }
 
@@ -55,15 +51,13 @@ export class UserController {
     @Delete('/:id')
     public async deleteUser(@Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
-            const user = await this.repository.delete(id);
+            await this.repository.delete(id);
             return await res.json({
                 user: id,
                 msg: 'User deleted successfully!'
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 }

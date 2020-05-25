@@ -12,95 +12,79 @@ import {
     Req,
     Res,
 } from "routing-controllers"
-
+import {getCustomRepository} from "typeorm"
 import User from "../database/entities/User";
-import ReviewRepository from "../repositories/ReviewRepository";
+import {ReviewRepository} from "../repositories/ReviewRepository";
+import {ReviewDTO} from "../dto";
 
 
 @JsonController("/reviews")
 export class ReviewController {
 
-    private readonly repository = new ReviewRepository();
+    private readonly repository = getCustomRepository(ReviewRepository);
 
     @Get("/")
     public async getReviews(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
-            const data = await this.repository.findAndCount(req);
-            return await res.json({
-                roles: data,
-                msg: "Reviews fetched successfully!"
-            })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+            const roles = await this.repository.findAndCount(req);
+            return await res.json(roles)
+        } catch (error) {
+            return res.json({error});
         }
     }
 
     @Get("/:id")
     public async getReview(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
-            const role = await this.repository.findById(id, {include: [User]});
+            const role = await this.repository.findById(id);
             return await res.json({
-                role,
-                msg: "Reviews fetched successfully!"
+                data: role,
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Authorized()
     @Post("/")
-    public async createReview(@CurrentUser() user: User, @Body() newReview, @Res() res: Response): Promise<any> {
+    public async createReview(@CurrentUser() user: User, @Body() newReview: ReviewDTO, @Res() res: Response): Promise<any> {
         try {
             const role = await this.repository.create({
                 ...newReview,
                 userId: user.id
             });
             return await res.status(201).json({
-                role,
-                msg: 'Review created successfully!'
+                data: role,
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Authorized()
     @Put('/:id')
-    public async updateReview(@CurrentUser() user: User, @Param("id") id: number, @Body() newValues,
-                            @Req() req: Request, @Res() res: Response): Promise<any> {
+    public async updateReview(@Param("id") id: number, @Body() newValues: object, @Res() res: Response): Promise<any> {
         try {
-            const role = await this.repository.update(newValues, {where: {id, userId: user.id}});
+            const role = await this.repository.update(id, newValues);
             return await res.json({
-                role,
-                msg: 'Review updated successfully!'
+                data: role,
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Authorized(['Admin', 'Moderator'])
     @Delete('/:id')
-    public async deleteReview(@CurrentUser() user: User, @Param("id") id: number, @Req() req: Request, @Res() res: Response): Promise<any> {
+    public async deleteReview(@Param("id") id: number, @Req() req: Request, @Res() res: Response): Promise<any> {
         try {
-            const role = await this.repository.delete({where: {id, userId: user.id}});
+            await this.repository.delete(id);
             return await res.json({
                 role: id,
                 msg: 'Review deleted successfully!'
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 }

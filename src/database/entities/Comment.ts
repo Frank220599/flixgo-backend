@@ -18,8 +18,14 @@ class Comment extends BaseEntity {
     @Column()
     public movieId: number;
 
+    @Column()
+    public userId: number;
+
+    @Column({select: true, nullable: true})
+    public parentId: number;
+
     @ManyToOne(type => Comment, comment => comment.children)
-    public parent: Comment;
+    public parent: Comment[];
 
     @OneToMany(type => Comment, comment => comment.parent)
     public children: Comment[];

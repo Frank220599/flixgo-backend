@@ -24,6 +24,12 @@ class User extends BaseEntity {
     @Column({select: false})
     password: string;
 
+    @Column({default: 3})
+    subscriptionId: number;
+
+    @Column({default: 1})
+    roleId: number;
+
     @ManyToOne(type => Subscription, subscription => subscription.users, {eager: true})
     public subscription: Subscription;
 

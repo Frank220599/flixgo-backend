@@ -5,18 +5,19 @@ import {useContainer} from "routing-controllers";
 import {Container} from "typedi";
 import debug from "debug";
 import logger from "morgan";
-import compression from "compression";
 
 
 useContainer(Container);
 const app = express();
-app.use(helmet());
-app.use(compression());
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(logger('tiny'));
+app.use([
+    helmet(),
+    express.json(),
+    express.urlencoded({extended: true}),
+    logger('tiny')
+]);
+
 app.get('/', (req, res) => {
-   res.send('Hello World!')
+    res.send('Hello World!')
 });
 debug('http');
 

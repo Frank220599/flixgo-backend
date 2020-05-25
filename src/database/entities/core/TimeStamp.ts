@@ -8,10 +8,10 @@ export class TimeStamp {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({select: false})
     deletedAt: Date;
 
-    @VersionColumn()
+    @VersionColumn({select: false})
     version: number;
 
 }

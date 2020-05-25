@@ -10,28 +10,26 @@ import {
     Put,
     Req,
     Res,
+    NotFoundError,
 } from "routing-controllers"
+import {getCustomRepository} from "typeorm"
 
-import GenreRepository from "../repositories/GenreRepository";
+import {GenreRepository} from "../repositories/GenreRepository";
+import {GenreDTO} from "../dto";
 
 
 @JsonController("/genres")
 export class GenreController {
 
-    private readonly repository = new GenreRepository();
+    private readonly repository = getCustomRepository(GenreRepository);
 
     @Get("/")
     public async getGenres(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
             const genres = await this.repository.findAndCount(req);
-            return await res.json({
-                genres,
-                msg: "Genres fetched successfully!"
-            })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+            return await res.json(genres)
+        } catch (error) {
+            return res.json({error})
         }
     }
 
@@ -39,64 +37,55 @@ export class GenreController {
     public async getGenre(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
             const genre = await this.repository.findById(id);
+            if (!genre) {
+                res.statusCode = 404;
+                throw new NotFoundError('Genre not found!')
+            }
             return await res.json({
-                genre,
-                msg: "Genres fetched successfully!"
+                data: genre,
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
-    // @Authorized()
+    @Authorized(['Admin', 'Moderator'])
     @Post("/")
-    public async createGenre(@Body() newGenre, @Res() res: Response): Promise<any> {
+    public async createGenre(@Body() newGenre: GenreDTO, @Res() res: Response): Promise<any> {
         try {
-            const genre = await this.repository.create({
-                ...newGenre,
-            });
+            const genre = await this.repository.create(newGenre);
             return await res.status(201).json({
-                genre,
-                msg: 'Genre created successfully!'
+                data: genre,
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Authorized()
     @Put('/:id')
-    public async updateGenre(@Param("id") id: number, @Body() newValues, @Req() req: Request, @Res() res: Response): Promise<any> {
+    public async updateGenre(@Param("id") id: number, @Body() newValues: GenreDTO, @Res() res: Response): Promise<any> {
         try {
-            const genre = await this.repository.update(newValues, {where: {id}});
+            const genre = await this.repository.update(id, newValues);
             return await res.json({
-                genre,
-                msg: 'Genre updated successfully!'
+                data: genre,
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Authorized(['Admin', 'Moderator'])
     @Delete('/:id')
-    public async deleteGenre(@Param("id") id: number, @Req() req: Request, @Res() res: Response): Promise<any> {
+    public async deleteGenre(@Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
-            const genre = await this.repository.delete({where: {id}});
+            await this.repository.delete(id);
             return await res.json({
                 genre: id,
                 msg: 'Genre deleted successfully!'
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 }

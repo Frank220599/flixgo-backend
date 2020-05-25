@@ -1,9 +1,10 @@
-import {Body, JsonController, Post, Res, Authorized, CurrentUser, Get, Req, Put} from "routing-controllers";
+import {Body, JsonController, Post, Res, Authorized, CurrentUser, Get, Req, Put, HttpError} from "routing-controllers";
 import {Response, Request} from "express";
+import {getCustomRepository} from "typeorm"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 import uniqid from 'uniqid'
-import {getCustomRepository} from "typeorm"
+
 import {PasswordDTO, SigninDTO, SignupDTO} from "../dto";
 import UserRepository from "../repositories/UserRepository";
 import sendMail from "../utils/sendMail";
@@ -17,23 +18,23 @@ export class AuthController {
     @Post("/signup")
     public async Signup(@Body() newUser: SignupDTO, @Res() res: Response): Promise<any> {
         try {
-            // await Validate(newUser, SignupDTO, res);
             const isUserExist = await this.repository.findByEmail(newUser.email);
+
             if (isUserExist) {
                 res.statusCode = 409;
-                throw  {email: 'This email already exist!'}
+                throw new HttpError(409, 'This email already exist!')
             }
             const hashedPassword = await bcrypt.hash(newUser.password, 12);
+
             const user = await this.repository.create({
                 ...newUser,
-                password: hashedPassword
+                password: hashedPassword,
             });
-            return await res.status(201).json({
-                user,
-                msg: 'User created successfully!'
-            })
-        } catch (e) {
-            return res.json(e)
+
+            return await res.status(201).json({user})
+
+        } catch (error) {
+            return res.json({error})
         }
     }
 
@@ -55,10 +56,8 @@ export class AuthController {
                 token,
                 user,
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
@@ -67,12 +66,10 @@ export class AuthController {
     public async Authenticate(@CurrentUser() user: User, @Res() res: Response, @Req() req: Request): Promise<any> {
         try {
             return await res.json({
-                user,
+                data: user
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
@@ -89,14 +86,13 @@ export class AuthController {
             }
             const hashedPassword = await bcrypt.hash(passwords.newPassword, 12);
 
-            const updated = await this.repository.update(userWithPass.id, {password: hashedPassword});
+            await this.repository.update(userWithPass.id, {password: hashedPassword});
+
             return await res.json({
                 msg: 'Password changed successfully'
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
@@ -115,12 +111,11 @@ export class AuthController {
             return await res.json({
                 msg: 'Password changed successfully'
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
 }
+
 

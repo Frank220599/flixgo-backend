@@ -1,4 +1,4 @@
-import {Request} from "express"
+import {Request, Response} from "express"
 import jwt from "jsonwebtoken";
 import {UnauthorizedError,} from "routing-controllers"
 import {getCustomRepository} from "typeorm"
@@ -9,7 +9,7 @@ interface IRequest extends Request {
     user: User
 }
 
-const isAuth = async ({request}: { request: IRequest}) => {
+const isAuth = async ({request, response}: { request: IRequest, response: Response }): Promise<User> => {
     try {
         const repository = getCustomRepository(UserRepository);
         const authHeader = await request.get('Authorization');
@@ -22,8 +22,9 @@ const isAuth = async ({request}: { request: IRequest}) => {
             throw new UnauthorizedError();
         }
         return request.user = await repository.findById(decodedToken.userId);
-    } catch (e) {
-        throw new UnauthorizedError(e)
+    } catch (error) {
+        // @ts-ignore
+        return response.status(401).json({error})
     }
 };
 

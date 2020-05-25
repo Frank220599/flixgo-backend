@@ -1,5 +1,5 @@
-import {createConnection} from "typeorm";
+import {createConnection, Connection} from "typeorm";
 
-const db = createConnection();
+const db: () => Promise<Connection> = async () => await createConnection();
 
 export default db

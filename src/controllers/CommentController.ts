@@ -2,7 +2,6 @@ import {Request, Response} from "express";
 import {
     Authorized,
     Body,
-    CurrentUser,
     Delete,
     Get,
     JsonController,
@@ -11,96 +10,84 @@ import {
     Put,
     Req,
     Res,
+    NotFoundError,
+    CurrentUser,
 } from "routing-controllers"
+import {getCustomRepository} from "typeorm"
 
-import User from "../database/entities/User";
 import CommentRepository from "../repositories/CommentRepository";
+import {CommentDTO} from "../dto";
+import User from "../database/entities/User";
 
 
 @JsonController("/comments")
 export class CommentController {
 
-    private readonly repository = new CommentRepository();
+    private readonly repository = getCustomRepository(CommentRepository);
 
     @Get("/")
     public async getComments(@Res() res: Response, @Req() req: Request): Promise<any> {
         try {
             const comments = await this.repository.findAndCount(req);
-            return await res.json({
-                comments,
-                msg: "Comments fetched successfully!"
-            })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+            return await res.json(comments)
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Get("/:id")
-    public async getComment(@Param('id') id: number, @Req() req: Request, @Res() res: Response): Promise<any> {
+    public async getComment(@Param('id') id: number, @Res() res: Response): Promise<any> {
         try {
-            const comment = await this.repository.findOne(req, {where: {id}});
+            const comment = await this.repository.findById(id);
+            if (!comment) {
+                res.statusCode = 404;
+                throw new NotFoundError('Comment not found!')
+            }
             return await res.json({
                 comment,
-                msg: "Comment fetched successfully!"
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
-    // @Authorized()
+    @Authorized(['Admin', 'Moderator'])
     @Post("/")
-    public async createComment(@CurrentUser() user: User, @Body() newComment, @Res() res: Response): Promise<any> {
+    public async createComment(@CurrentUser() user: User, @Body() newComment: CommentDTO, @Res() res: Response): Promise<any> {
         try {
-            const comment = await this.repository.create({
-                ...newComment,
-                userId: 1
-            });
+            const comment = await this.repository.create({...newComment, userId: user.id});
             return await res.status(201).json({
-                comment,
-                msg: 'Comment created successfully!'
+                data: comment,
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Authorized()
     @Put('/:id')
-    public async updateComment(@CurrentUser() user: User, @Param("id") id: number, @Body() newValues,
-                               @Req() req: Request, @Res() res: Response): Promise<any> {
+    public async updateComment(@Param("id") id: number, @Body() newValues: CommentDTO, @Res() res: Response): Promise<any> {
         try {
-            const comment = await this.repository.update(newValues, {where: {id, userId: user.id}});
+            const comment = await this.repository.update(id, newValues);
             return await res.json({
                 comment,
-                msg: 'Comment updated successfully!'
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 
     @Authorized(['Admin', 'Moderator'])
     @Delete('/:id')
-    public async deleteComment(@CurrentUser() user: User, @Param("id") id: number, @Req() req: Request, @Res() res: Response): Promise<any> {
+    public async deleteComment(@Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
-            const comment = await this.repository.delete({where: {id, userId: user.id}});
+            await this.repository.delete(id);
             return await res.json({
                 comment: id,
                 msg: 'Comment deleted successfully!'
             })
-        } catch (e) {
-            return res.json({
-                error: e.message
-            })
+        } catch (error) {
+            return res.json({error})
         }
     }
 }

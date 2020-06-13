@@ -11,5 +11,7 @@ define(Movie, (faker, context: { roles: string[] }) => {
     movie.releaseYear = 1920 + Math.floor(Math.random() * 100);
     movie.age = 16;
     movie.duration = 120;
+    movie.qualityId = 1;
+
     return movie
 });

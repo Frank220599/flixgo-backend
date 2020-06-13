@@ -1,11 +1,13 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Mr.Frank">
     <words>
+      <w>axios</w>
       <w>bcrypt</w>
       <w>farrux</w>
       <w>flix</w>
       <w>flixgo</w>
       <w>middlewares</w>
+      <w>multer</w>
       <w>nodemailer</w>
       <w>sequelize</w>
       <w>signin</w>

@@ -25,7 +25,6 @@ abstract class CrudRepository<Entity, EntityDTO> extends AbstractRepository<Enti
     }
 
     public async create(newEntity: EntityDTO): Promise<Entity> {
-        console.log(newEntity)
         return await this.repository.save(newEntity)
     }
 

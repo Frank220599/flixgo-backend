@@ -11,11 +11,13 @@ import {
     Req,
     Res,
     NotFoundError,
+    UploadedFile, UseBefore
 } from "routing-controllers"
-import {getCustomRepository} from "typeorm"
+import {getCustomRepository, Repository} from "typeorm"
 
 import MovieRepository from "../repositories/MovieRepository";
 import {MovieDTO} from "../dto";
+import upload from "../middlewares/upload";
 
 
 @JsonController("/movies")
@@ -49,26 +51,33 @@ export class MovieController {
         }
     }
 
-    @Authorized(['Admin', 'Moderator'])
+    // @Authorized(['Admin', 'Moderator'])
     @Post("/")
-    public async createMovie(@Body() newMovie: MovieDTO, @Res() res: Response): Promise<any> {
+    public async createMovie(
+        @Body() newMovie: MovieDTO,
+        @Res() res: Response,
+        @UploadedFile('cover', {options: upload('uploads', ['image/png', 'image/jpeg'])}) cover: any,
+        @Req() req: Request
+    ): Promise<any> {
         try {
-            const movie = await this.repository.create(newMovie);
+            const movie = await this.repository.create({...newMovie, cover: cover.path});
             return await res.status(201).json({
                 movie,
             })
         } catch (error) {
-            return res.json({error})
+            return res.json({error: error.message})
         }
     }
 
     @Authorized()
     @Put('/:id')
-    public async updateMovie(@Param("id") id: number, @Body() newValues: object, @Res() res: Response): Promise<any> {
+    public async updateMovie(@Param("id") id: number, @Body({
+        validate: {skipMissingProperties: true}
+    }) newValues: MovieDTO, @Res() res: Response): Promise<any> {
         try {
             const movie = await this.repository.update(id, newValues);
             return await res.json({
-                movie,
+                data: movie,
             })
         } catch (error) {
             return res.json({error})

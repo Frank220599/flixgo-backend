@@ -38,7 +38,9 @@ export class UserController {
 
     @Authorized()
     @Put('/:id')
-    public async updateUser(@Body() values: UserDTO, @Param("id") id: number, @Res() res: Response): Promise<any> {
+    public async updateUser(@Body({
+        validate: {skipMissingProperties: true}
+    }) values: UserDTO, @Param("id") id: number, @Res() res: Response): Promise<any> {
         try {
             const user = await this.repository.update(id, values);
             return await res.json({data: user})

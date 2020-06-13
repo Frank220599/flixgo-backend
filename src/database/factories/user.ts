@@ -11,9 +11,7 @@ define(User, (faker, context: { roles: string[] }) => {
     user.lastName = lastName;
     user.email = faker.internet.email();
     user.password = faker.random.word();
-    // @ts-ignore
-    user.role = 3;
-    // @ts-ignore
-    user.subscription = 1;
+    user.roleId = 3;
+    user.subscriptionId = 1;
     return user
 });

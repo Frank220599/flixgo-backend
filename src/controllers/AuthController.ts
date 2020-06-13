@@ -43,6 +43,11 @@ export class AuthController {
         try {
             const user = await this.repository.getUserWithPassword(userBody.email);
 
+            if (!user) {
+                res.statusCode = 409;
+                throw new HttpError(409, 'Incorrect Login or password!')
+            }
+
             const isEqual = await bcrypt.compare(userBody.password, user.password);
             if (!isEqual) {
                 res.statusCode = 401;
@@ -51,7 +56,7 @@ export class AuthController {
             const token = await jwt.sign({
                 email: user.email,
                 userId: user.id,
-            }, 'secret', {expiresIn: '1h'});
+            }, 'secret', {expiresIn: '100h'});
             return await res.json({
                 token,
                 user,
@@ -115,7 +120,6 @@ export class AuthController {
             return res.json({error})
         }
     }
-
 }
 
 

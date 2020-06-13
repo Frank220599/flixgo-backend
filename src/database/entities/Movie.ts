@@ -1,10 +1,10 @@
-import {Entity, Column, OneToMany} from "typeorm";
+import {Entity, Column, OneToMany, ManyToOne, ManyToMany, JoinTable, JoinColumn} from "typeorm";
 import Review from "./Review";
 import Comment from "./Comment";
-import Genre from "./Genre";
 import Photo from "./Photo";
 import Quality from "./Quality";
 import {BaseEntity} from "./core/BaseEntity";
+import Genre from "./Genre";
 
 @Entity()
 class Movie extends BaseEntity {
@@ -17,6 +17,9 @@ class Movie extends BaseEntity {
 
     @Column()
     public duration: number;
+
+    @Column({default: 0})
+    public views: number;
 
     @Column({default: 0})
     public rating: number;
@@ -33,13 +36,20 @@ class Movie extends BaseEntity {
     @Column()
     releaseYear: number;
 
+    @Column({default: 0})
+    status: number;
+
     @Column()
     age: number;
 
     @Column()
     country: string;
 
-    @OneToMany(type => Genre, genre => genre.movies)
+    @Column()
+    qualityId: number;
+
+    @ManyToMany(type => Genre, genre => genre.movies, {eager: true})
+    @JoinTable({name: 'movie_genres'})
     genres: Genre[];
 
     @OneToMany(type => Photo, photo => photo.movie)
@@ -48,8 +58,11 @@ class Movie extends BaseEntity {
     @OneToMany(type => Review, review => review.movie)
     reviews: Review[];
 
-    @OneToMany(type => Comment, comment => comment.movie)
-    comments: Comment[]
+    @OneToMany(type => Comment, comment => comment.movie, {eager: true})
+    comments: Comment[];
+
+    @ManyToOne(type => Quality, quality => quality.movies, {eager: true})
+    quality: Quality;
 
 }
 

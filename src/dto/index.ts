@@ -1,4 +1,4 @@
-import {IsEmail, Length, IsNotEmpty, IsOptional} from 'class-validator';
+import {IsEmail, Length, IsNotEmpty, IsOptional, IsBoolean, IsBase64, IsArray} from 'class-validator';
 
 export class SigninDTO {
 
@@ -41,7 +41,10 @@ export class UserDTO {
     @Length(2, 20)
     lastName: string;
 
-    // @Length(2, 20)
+    @IsBoolean()
+    status: boolean;
+
+    @Length(2, 20)
     userName: string;
 
 }
@@ -101,19 +104,33 @@ export class MovieDTO {
     @IsNotEmpty()
     duration: number;
 
+
+    cover: any;
+
+    @IsNotEmpty()
+    age: number;
+
+    @IsNotEmpty()
+    releaseYear: string;
+
+    @IsNotEmpty()
+    country: string;
+
+    @IsNotEmpty()
+    qualityId: number;
+
+    @IsArray()
+    genres: Array<number>;
+
     rating: number;
 
-    dislike: number;
-
-    cover: string;
+    status: boolean;
 
     like: number;
 
-    age: number;
+    dislike: number;
 
-    country: string;
-
-    releaseYear: string;
+    genreId: number;
 
 }
 

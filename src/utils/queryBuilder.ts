@@ -81,13 +81,21 @@ const queryBuilder = (req: any, paginate?: boolean): FindManyOptions => {
                                 ...filterOption,
                                 [key]: Like(`%${childValue}%`)
                             }
+                        } else {
+                            filterOption = {
+                                // @ts-ignore
+                                ...filterOption,
+                                [key]: {
+                                    [childKey]: Equal(childValue)
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-    // @ts-ignore
-    return {
+        // @ts-ignore
+        return {
             relations,
             ...paginateOptions,
             where: filterOption,

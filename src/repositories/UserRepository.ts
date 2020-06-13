@@ -14,7 +14,7 @@ class UserRepository extends CrudRepository<User, SignupDTO> {
     }
 
     public async getUserWithPassword(email: string): Promise<User> {
-        return await this.createQueryBuilder('user')
+        return await this.repository.createQueryBuilder('user')
             .where('user.email = :email', {email})
             .innerJoinAndSelect('user.role', 'role', )
             .innerJoinAndSelect('user.subscription', 'subscription')

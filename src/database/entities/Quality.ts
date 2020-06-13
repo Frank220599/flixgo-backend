@@ -1,4 +1,4 @@
-import {Entity, Column} from "typeorm";
+import {Entity, Column, OneToMany} from "typeorm";
 import Movie from "./Movie";
 import {BaseEntity} from "./core/BaseEntity";
 
@@ -9,8 +9,8 @@ class Quality extends BaseEntity {
     @Column({unique: true})
     public name: string;
 
-    // @HasMany(() => Movie)
-    // movies: Movie[];
+    @OneToMany(() => Movie, movie => movie.quality)
+    movies: Movie[];
 
 }
 

@@ -1,4 +1,4 @@
-import {AbstractRepository} from "typeorm"
+import {AbstractRepository, FindOneOptions} from "typeorm"
 import queryBuilder from "./queryBuilder";
 import Paginate from "./paginate";
 
@@ -20,8 +20,8 @@ abstract class CrudRepository<Entity, EntityDTO> extends AbstractRepository<Enti
         await this.repository.softDelete(id);
     }
 
-    public async findById(id: number): Promise<Entity> {
-        return await this.repository.findOne(id)
+    public async findById(id: number, options?: FindOneOptions): Promise<Entity> {
+        return await this.repository.findOne(id, options)
     }
 
     public async create(newEntity: EntityDTO): Promise<Entity> {

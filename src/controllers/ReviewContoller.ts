@@ -49,13 +49,17 @@ export class ReviewController {
     @Post("/")
     public async createReview(@CurrentUser() user: User, @Body() newReview: ReviewDTO, @Res() res: Response): Promise<any> {
         try {
-            const role = await this.repository.create({
+            const result = await this.repository.create({
                 ...newReview,
                 userId: user.id
             });
+
+            const review = await this.repository.findById(result.id, {relations: ['user']});
+
             return await res.status(201).json({
-                data: role,
+                data: review,
             })
+
         } catch (error) {
             return res.json({error})
         }

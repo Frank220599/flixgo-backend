@@ -6,7 +6,7 @@
   "password": "22051999",
   "database": "flixgo",
   "synchronize": true,
-  "logging": false,
+  "logging": true,
   "seeds": [
     "src/database/seeds/**/*.ts"
   ],

@@ -11,9 +11,9 @@ import {
     Req,
     Res,
     NotFoundError,
-    UploadedFile, UseBefore
+    UploadedFile,
 } from "routing-controllers"
-import {getCustomRepository, Repository} from "typeorm"
+import {getCustomRepository} from "typeorm"
 
 import MovieRepository from "../repositories/MovieRepository";
 import {MovieDTO} from "../dto";
@@ -31,7 +31,7 @@ export class MovieController {
             const movies = await this.repository.findAndCount(req);
             return await res.json(movies)
         } catch (error) {
-            return res.json({error})
+            return res.json({error: error.message})
         }
     }
 
@@ -51,7 +51,7 @@ export class MovieController {
         }
     }
 
-    // @Authorized(['Admin', 'Moderator'])
+    @Authorized(['Admin', 'Moderator'])
     @Post("/")
     public async createMovie(
         @Body() newMovie: MovieDTO,

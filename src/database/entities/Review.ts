@@ -4,7 +4,7 @@ import Movie from "./Movie";
 import {BaseEntity} from "./core/BaseEntity";
 
 @Entity()
-class Review extends BaseEntity{
+class Review extends BaseEntity {
 
     @Column()
     title: string;
@@ -12,7 +12,7 @@ class Review extends BaseEntity{
     @Column()
     text: string;
 
-    @Column()
+    @Column({type: "float"})
     rating: number;
 
     @Column({default: 0})
@@ -21,6 +21,11 @@ class Review extends BaseEntity{
     @Column({default: 0})
     dislike: number;
 
+    @Column()
+    userId: number;
+
+    @Column()
+    movieId: number;
 
     @ManyToOne(type => User, user => user.reviews)
     user: User;

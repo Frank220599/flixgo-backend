@@ -7,6 +7,7 @@ interface IRequest extends Request {
     }
 }
 
+
 const Paginate = (req: IRequest, count: number) => ({
     currentPage: +req.query.page || 1,
     totalCount: count,

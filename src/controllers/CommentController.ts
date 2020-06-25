@@ -51,14 +51,18 @@ export class CommentController {
         }
     }
 
-    @Authorized(['Admin', 'Moderator'])
+    @Authorized()
     @Post("/")
     public async createComment(@CurrentUser() user: User, @Body() newComment: CommentDTO, @Res() res: Response): Promise<any> {
         try {
-            const comment = await this.repository.create({...newComment, userId: user.id});
+            const result = await this.repository.create({...newComment, userId: user.id});
+
+            const comment = await this.repository.findById(result.id, {relations: ['user']});
+
             return await res.status(201).json({
                 data: comment,
             })
+
         } catch (error) {
             return res.json({error})
         }

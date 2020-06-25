@@ -21,7 +21,7 @@ class Movie extends BaseEntity {
     @Column({default: 0})
     public views: number;
 
-    @Column({default: 0})
+    @Column({default: 0, type: "float"})
     public rating: number;
 
     @Column()
